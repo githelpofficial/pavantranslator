@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pavan Translator</title>
+  <style>
+    :root {
+      --bg-color: #121212;
+      --glass-bg: rgba(255, 255, 255, 0.04);
+      --border: rgba(255, 255, 255, 0.08);
+      --accent: #ffffff;
+      --text: #e0e0e0;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'SF Pro Display', 'Segoe UI', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 2rem;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 600px;
+      background: var(--glass-bg);
+      border: 1px solid var(--border);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
+      animation: fadeIn 0.4s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: scale(0.95);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    h1 {
+      text-align: center;
+      color: var(--accent);
+      font-size: 3rem;
+      margin-bottom: 1.5rem;
+      font-weight: 600;
+    }
+
+    .tabs {
+      display: flex;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      margin-bottom: 1rem;
+      overflow: hidden;
+    }
+
+    .tab {
+      flex: 1;
+      text-align: center;
+      padding: 0.8rem;
+      cursor: pointer;
+      color: #aaa;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    .tab.active {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    textarea {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 1rem;
+      font-size: 1rem;
+      border-radius: 12px;
+      margin-top: 1rem;
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    button {
+      flex: 1;
+      padding: 0.75rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.07);
+      color: white;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    @media (max-width: 500px) {
+      .buttons {
+        flex-direction: column;
+      }
+    }
+
+    .wrapper {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    .credits-box {
+      max-width: 600px;
+      margin-top: 1.5rem;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border-radius: 15px;
+      padding: 1rem;
+      text-align: center;
+      color: #888;
+      font-size: 0.85rem;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.25);
+      animation: fadeIn 0.6s ease;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrapper">
+    <div class="container">
+      <h1>Pavan Translator</h1>
+
+      <div class="tabs">
+        <div class="tab active" id="tab-peng" onclick="switchTab('peng')">Pavan English</div>
+        <div class="tab" id="tab-ptam" onclick="switchTab('ptam')">Pavan Tamil</div>
+      </div>
+
+      <textarea id="input" placeholder="Type or speak Pavan words..."></textarea>
+      <textarea id="output" readonly placeholder="Translated result appears here..."></textarea>
+
+      <div class="buttons">
+        <button id="translateBtn">Translate</button>
+        <button onclick="clearText()">Refresh</button>
+        <button onclick="startSpeech()">Speak</button>
+      </div>
+
+      <audio id="beep" src="https://freesound.org/data/previews/522/522756_832167-lq.mp3"></audio>
+    </div>
+
+    <div class="credits-box">
+      <p>Pavan Translator vBETA</p>
+      <p>by Ishaan and Tejas</p>
+    </div>
+  </div>
+</body>
+
+
+
+<script>
+  let currentTab = 'peng';
+
+  const pavanEnglishDict = {
+    "da": "man",
+    "?": "english no",
+    "??": "i do not understand",
+    "???": "i am gay",
+    "no": "yes",
+    "yes": "no",
+    "cap": "true",
+    "tanvi": "tanvi 💖",
+    "dont": "do",
+    "don't": "do",
+    "do not": "do",
+    "food": "mcdonalds 💖",
+    "something": "mcdonalds big maharaja mac",
+    "what": "mcdonalds?",
+    "like": "love",
+    "stfu": "please give me chicken nuggets",
+    "fuck": "love",
+    "not": "so"
+  };
+
+  const pavanTamilDict = {
+    "mass": "nice",
+    "ompu": "sleep",
+    "gaaj": "pavan",
+    "adi": "kai adi",
+    "enna": "what",
+    "mayiru": "hair",
+    "mayre": "hair",
+  };
+
+  function switchTab(tab) {
+    currentTab = tab;
+    document.getElementById("tab-peng").classList.remove("active");
+    document.getElementById("tab-ptam").classList.remove("active");
+    document.getElementById(`tab-${tab}`).classList.add("active");
+    clearText();
+  }
+
+  function translate() {
+    const input = document.getElementById("input").value.trim();
+    if (!input) return;
+
+    const words = input.split(/\s+/);
+    const dict = currentTab === 'peng' ? pavanEnglishDict : pavanTamilDict;
+
+    const translated = words.map(word => {
+      const clean = word.toLowerCase().replace(/[^a-z]/gi, '');
+      return dict[clean] || word;
+    });
+
+    document.getElementById("output").value = translated.join(" ");
+
+    const beep = document.getElementById("beep");
+    beep.currentTime = 0;
+    beep.play();
+  }
+
+  function clearText() {
+    document.getElementById("input").value = "";
+    document.getElementById("output").value = "";
+  }
+
+  // ENTER key triggers translate
+  document.getElementById("input").addEventListener("keydown", function (e) {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      translate();
+    }
+  });
+
+  // Make Translate button work
+  document.getElementById("translateBtn").addEventListener("click", translate);
+
+  // Speech to text
+  function startSpeech() {
+    if (!('webkitSpeechRecognition' in window)) {
+      alert("Speech recognition not supported in this browser.");
+      return;
+    }
+
+    const recognition = new webkitSpeechRecognition();
+    recognition.lang = 'en-US';
+    recognition.continuous = false;
+    recognition.interimResults = false;
+
+    recognition.onresult = function (event) {
+      const speechResult = event.results[0][0].transcript;
+      document.getElementById("input").value = speechResult;
+      translate();
+    };
+
+    recognition.onerror = function (event) {
+      alert("Mic error: " + event.error);
+    };
+
+    recognition.start();
+  }
+</script>
+</body>
+
+</html>
