@@ -161,17 +161,16 @@
       <h1>Pavan Translator</h1>
 
       <div class="tabs">
-        <div class="tab active" id="tab-peng" onclick="switchTab('peng')">Pavan English</div>
-        <div class="tab" id="tab-ptam" onclick="switchTab('ptam')">Pavan Tamil</div>
+        <div class="tab active" id="tab-peng" onclick="switchTab('peng')">Pavan English V1</div>
+        <div class="tab" id="tab-ptam" onclick="switchTab('ptam')">Pavan Tamil V1</div>
       </div>
 
-      <textarea id="input" placeholder="Type or speak Pavan words..."></textarea>
-      <textarea id="output" readonly placeholder="Translated result appears here..."></textarea>
+      <textarea id="input" placeholder="Type or speak Pavan words"></textarea>
+      <textarea id="output" readonly placeholder="Translated result appears here"></textarea>
 
       <div class="buttons">
         <button id="translateBtn">Translate</button>
         <button onclick="clearText()">Refresh</button>
-        <button onclick="startSpeech()">Speak</button>
       </div>
 
       <audio id="beep" src="https://freesound.org/data/previews/522/522756_832167-lq.mp3"></audio>
